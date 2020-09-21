@@ -1,3 +1,26 @@
+# Demo: Live preview with Next.js and Sanity.io
+
+This is a minimal setup for how to do [real-time](https://www.sanity.io/docs/realtime-updates) preview using [Next.js](https://nextjs.org) and [Sanity.io](https://www.sanity.io). It sets up a client side listener with a client that uses your authentication if you're logged into Sanity.io.
+
+[Join the Sanity community to ask about this](https://slack.sanity.io).
+
+## Getting started
+
+0. Install dependencies with `yarn` (or `npm i`)
+1. Replace the client configuration with your own in `./lib/data.js`
+2. Add the URLs that you will be previewing on to your [Sanity project’s CORS settings](https://www.sanity.io/docs/cors), allow credentials. [_It’s important that you understand the risks first, especially if you plan to use wildcards._](https://www.sanity.io/docs/browser-security-and-cors)
+3. Run the dev server (`yarn dev`) or build/deploy the Next app. The preview works in both dev and production since it sets up client-side data fetching.
+
+### Gotchas
+
+You probably shouldn't use the `useEffect` method in production as it will set up listeners for all your site’s visitors. You can probably use [Next.js official preview example](https://github.com/vercel/next.js/tree/canary/examples/cms-sanity) to check if one comes from the preview route, and then set it up.
+
+You can't resolve references or use projections with listeners. That’s why in `./[slug].js` you'll find a minimal example of how to deal with references by listening to all changes, and then writing custom resolvers to replace data.
+
+---
+
+# Original README.md
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

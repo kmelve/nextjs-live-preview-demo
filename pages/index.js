@@ -8,7 +8,7 @@ export default function Home({posts = []}) {
       <h1>Posts</h1>
       <ul>
         {posts.length
-        ? posts.map((slug)=> (<li key={slug}>
+        ? posts.map(({params: {slug}})=> (<li key={slug}>
           <Link href={slug}><a>{slug}</a></Link>
         </li>))
         : 'No posts'
