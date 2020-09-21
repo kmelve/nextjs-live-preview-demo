@@ -16,7 +16,7 @@ export default function Post({post = {}}) {
   useEffect(() => {
     const sub = client
       .config({withCredentials: true})
-      .listen(query, {slug: post.slug.current}, {visibility: 'query'})
+      .listen(query, {visibility: 'query'})
       .subscribe(({result}) => {
         if (result) {
           const updatedDocId = result._id.replace('drafts.', '')
