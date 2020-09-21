@@ -2,13 +2,14 @@ import {useState, useEffect} from 'react'
 import RichText from '@sanity/block-content-to-react'
 import {client, getAllPostSlugs, getPost} from '../lib/data'
 
-const query = `*`
+// Listen only to relevant updates
+const query = `*[_type in ['post', 'author']]`
 
 export default function Post({post = {}}) {
   const [postData, setPostData] = useState(post)
   /**
    * Set up a real-time listener using useEffect.
-   * Updates are pushed and not pulled. Using Event Stream, so theoretically shouldn't burn a lot of API requests.
+   * Updates are pushed and not pulled. It theoretically shouldn't burn a lot of API requests, since it’s using Event Stream.
    *
    * .config({withCredentials: true}) => if you're logged into your project, the client uses your authentication to fetch drafts
    */
@@ -23,7 +24,8 @@ export default function Post({post = {}}) {
             case 'post':
               const oldPostId = postData._id.replace('drafts.')
               if (oldPostId === updatedDocId) {
-                setPostData(result)
+                // Don't overwrite author with reference data
+                setPostData({...result, author: postData.author})
               }
               break;
             case 'author':
@@ -46,7 +48,7 @@ export default function Post({post = {}}) {
   return <article>
     <h1>{title}</h1>
     {author && <h2>By {author?.name}</h2>}
-    <RichText blocks={body} {...client.config()} />
+    {body && <RichText blocks={body} {...client.config()} />}
   </article>
 }
 
