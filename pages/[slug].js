@@ -18,19 +18,20 @@ export default function Post({post = {}}) {
       .listen(query, {slug: post.slug.current}, {visibility: 'query'})
       .subscribe(({result}) => {
         if (result) {
+          const updatedDocId = result._id.replace('drafts.', '')
           switch(result._type) {
             case 'post':
-              setPostData(result)
+              const oldPostId = postData._id.replace('drafts.')
+              if (oldPostId === updatedDocId) {
+                setPostData(result)
+              }
               break;
             case 'author':
               const {author} = postData
               // Tackle drafts on both ends
               const oldAuthorId = author._id.replace('drafts.', '')
-              const newAuthorID = result._id.replace('drafts.', '')
               // Only update if it’s the author of this post
-              if (
-                oldAuthorId === newAuthorID
-              ) {
+              if (oldAuthorId === updatedDocId) {
                 setPostData({...postData, author: result})
               }
               break;
